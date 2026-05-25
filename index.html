@@ -31,21 +31,14 @@
       flex-shrink: 0;
       gap: 16px;
     }
-    .header-left  {
-      display: flex; flex-direction: column;
-      align-items: flex-start; justify-content: center;
-      gap: 5px; flex: 1;
-    }
+    .header-left  { display: flex; align-items: center; gap: 8px; justify-content: flex-start; flex: 1; }
     .header-center{
       position: absolute; left: 50%; transform: translateX(-50%);
       display: flex; align-items: center; pointer-events: none;
     }
-    .header-right {
-      display: flex; flex-direction: column;
-      align-items: flex-end; justify-content: center;
-      gap: 5px; flex: 1;
-    }
-    .btn-row { display: flex; align-items: center; gap: 5px; }
+    .header-right { display: flex; align-items: center; gap: 8px; justify-content: flex-end; flex: 1; }
+    /* En desktop btn-row es invisible: sus hijos fluyen en la fila del header */
+    .btn-row { display: contents; }
 
     .tool-label { font-size: 11px; letter-spacing: .12em; color: #4A4A4A; text-transform: uppercase; padding-right: 2px; }
     .sep        { width: 1px; height: 22px; background: #2E2E2E; margin: 0 4px; }
@@ -153,10 +146,10 @@
     /* ── Responsive / Mobile (≤ 700px) ──────────────────────────────── */
     @media (max-width: 700px) {
 
-      /* ── Header: 3 franjas apiladas (logo / botones editor / botones general) ── */
+      /* ── Header: logo arriba full-width, luego left y right lado a lado ── */
       .header {
-        flex-direction: column;
-        align-items: stretch;
+        flex-wrap: wrap;
+        align-items: flex-start;
         padding: 10px 14px 0;
         gap: 0;
       }
@@ -171,26 +164,29 @@
       }
       .header-center svg { width: 100%; height: auto; }
 
-      /* Franja 2 – botones de edición, centrados */
+      /* Franjas 2 & 3 – izquierda y derecha lado a lado, cada una en 2 filas */
       .header-left {
-        flex-direction: row;
-        flex: none; width: 100%;
-        flex-wrap: wrap; align-items: center; justify-content: center; gap: 5px;
-        padding: 8px 0;
+        flex: 1;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 5px;
+        padding: 8px 0 10px;
         border-top: 1px solid #252525;
       }
 
-      /* Franja 3 – botones generales, centrados */
       .header-right {
-        flex-direction: row;
-        flex: none; width: 100%;
-        flex-wrap: wrap; align-items: center; justify-content: center; gap: 5px;
-        padding: 8px 0;
+        flex: 1;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: flex-start;
+        gap: 5px;
+        padding: 8px 0 10px;
         border-top: 1px solid #252525;
       }
 
-      /* btn-row transparent en mobile: sus hijos pasan al flex padre */
-      .btn-row { display: contents; }
+      /* btn-row es una fila real en mobile */
+      .btn-row { display: flex; gap: 5px; }
 
       .sep { display: none; }
 
