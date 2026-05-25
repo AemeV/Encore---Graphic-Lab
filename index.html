@@ -25,25 +25,34 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 22px 28px;
+      padding: 14px 28px;
       background: #1E1E1E;
       border-bottom: 1px solid #2E2E2E;
       flex-shrink: 0;
       gap: 16px;
     }
-    .header-left  { display: flex; align-items: center; gap: 8px; justify-content: flex-start; flex: 1; }
+    .header-left  {
+      display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: center;
+      gap: 5px; flex: 1;
+    }
     .header-center{
       position: absolute; left: 50%; transform: translateX(-50%);
       display: flex; align-items: center; pointer-events: none;
     }
-    .header-right { display: flex; align-items: center; gap: 8px; justify-content: flex-end; flex: 1; }
+    .header-right {
+      display: flex; flex-direction: column;
+      align-items: flex-end; justify-content: center;
+      gap: 5px; flex: 1;
+    }
+    .btn-row { display: flex; align-items: center; gap: 5px; }
 
     .tool-label { font-size: 11px; letter-spacing: .12em; color: #4A4A4A; text-transform: uppercase; padding-right: 2px; }
     .sep        { width: 1px; height: 22px; background: #2E2E2E; margin: 0 4px; }
-    .cell-count { font-size: 12px; color: #4A4A4A; min-width: 62px; text-align: right; }
+
 
     .btn {
-      padding: 9px 16px;
+      padding: 11px 16px;
       border: 1px solid #383838; background: #262626; color: #888;
       border-radius: 5px; font-size: 12px; font-weight: 500;
       letter-spacing: .06em; cursor: pointer;
@@ -140,6 +149,76 @@
     }
     .archive-card-dl:hover { background: #2A2A2A; border-color: #cdff7c; color: #cdff7c; }
     .archive-placeholder-text { font-size: 10px; color: #2A2A2A; letter-spacing: .1em; text-transform: uppercase; }
+
+    /* ── Responsive / Mobile (≤ 700px) ──────────────────────────────── */
+    @media (max-width: 700px) {
+
+      /* ── Header: 3 franjas apiladas (logo / botones editor / botones general) ── */
+      .header {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px 14px 0;
+        gap: 0;
+      }
+
+      /* Franja 1 – logo full-width centrado con margen lateral */
+      .header-center {
+        position: static; transform: none;
+        order: -1; width: 100% !important;
+        display: flex; justify-content: center;
+        padding: 0 16px 10px;
+        pointer-events: none;
+      }
+      .header-center svg { width: 100%; height: auto; }
+
+      /* Franja 2 – botones de edición, centrados */
+      .header-left {
+        flex-direction: row;
+        flex: none; width: 100%;
+        flex-wrap: wrap; align-items: center; justify-content: center; gap: 5px;
+        padding: 8px 0;
+        border-top: 1px solid #252525;
+      }
+
+      /* Franja 3 – botones generales, centrados */
+      .header-right {
+        flex-direction: row;
+        flex: none; width: 100%;
+        flex-wrap: wrap; align-items: center; justify-content: center; gap: 5px;
+        padding: 8px 0;
+        border-top: 1px solid #252525;
+      }
+
+      /* btn-row transparent en mobile: sus hijos pasan al flex padre */
+      .btn-row { display: contents; }
+
+      .sep { display: none; }
+
+      /* ── Paneles: apilados, reparten el alto restante ── */
+      .panels { flex-direction: column; }
+      .panel  { flex: 1; min-height: 0; }
+      .panel.preview { border-left: none; border-top: 1px solid #282828; }
+
+      /* body ocupa el espacio disponible; footer no se encoge nunca */
+      .panel-body   { flex: 1; min-height: 0; }
+      .panel-footer {
+        flex-shrink: 0;
+        height: auto; min-height: 48px;
+        flex-wrap: wrap; padding: 7px; gap: 5px;
+        justify-content: center;
+      }
+
+      /* Preview mismo ancho que editor */
+      .preview-stack { max-width: none; }
+
+      /* Botones compactos */
+      .btn, .tab-btn { padding: 7px 10px; font-size: 11px; }
+
+      /* ── Brand Archive: tarjetas en columna ── */
+      .archive-view    { padding: 20px 14px; }
+      .archive-cards   { flex-direction: column; }
+      .archive-section { margin-bottom: 36px; }
+    }
   </style>
 </head>
 <body>
@@ -714,14 +793,16 @@ function App() {
 
         {/* LEFT */}
         <div className="header-left">
-          <button className="btn" onClick={undo} title="Deshacer ⌘Z">↩</button>
-          <button className="btn" onClick={redo} title="Rehacer ⌘⇧Z">↪</button>
-          <div className="sep" />
-          <input ref={fileInputRef} type="file" accept=".json" style={{ display: 'none' }} onChange={loadDesign} />
-          <button className="btn" onClick={() => fileInputRef.current && fileInputRef.current.click()}>Abrir</button>
-          <button className="btn" onClick={saveDesign}>Guardar</button>
-          <div className="sep" />
-          <button className="btn warn" onClick={clear}>Limpiar</button>
+          <div className="btn-row">
+            <button className="btn" onClick={undo} title="Deshacer ⌘Z">↩</button>
+            <button className="btn" onClick={redo} title="Rehacer ⌘⇧Z">↪</button>
+            <button className="btn warn" onClick={clear}>Limpiar</button>
+          </div>
+          <div className="btn-row">
+            <input ref={fileInputRef} type="file" accept=".json" style={{ display: 'none' }} onChange={loadDesign} />
+            <button className="btn" onClick={() => fileInputRef.current && fileInputRef.current.click()}>Abrir</button>
+            <button className="btn" onClick={saveDesign}>Guardar</button>
+          </div>
         </div>
 
         {/* CENTER */}
@@ -731,20 +812,19 @@ function App() {
 
         {/* RIGHT */}
         <div className="header-right">
-          <span className="cell-count">{filled.size} celdas</span>
-          <div className="sep" />
-          <div className="sep" />
-          <button className="btn accent" onClick={exportSVG}>Exportar SVG</button>
-          <div className="sep" />
-          <button className={'btn' + (previewOnly ? ' on' : '')}
-            onClick={() => setPreviewOnly(v => !v)}>
-            {previewOnly ? '⊞ Editor' : '⊡ Preview'}
-          </button>
-          <div className="sep" />
-          <button className={'btn' + (showArchive ? ' on' : '')}
-            onClick={() => setShowArchive(v => !v)}>
-            Brand Archive
-          </button>
+          <div className="btn-row">
+            <button className={'btn' + (showArchive ? ' on' : '')}
+              onClick={() => setShowArchive(v => !v)}>
+              Brand Archive
+            </button>
+          </div>
+          <div className="btn-row">
+            <button className="btn accent" onClick={exportSVG}>Exportar</button>
+            <button className={'btn' + (previewOnly ? ' on' : '')}
+              onClick={() => setPreviewOnly(v => !v)}>
+              {previewOnly ? 'Editor' : 'Preview'}
+            </button>
+          </div>
         </div>
 
       </header>
