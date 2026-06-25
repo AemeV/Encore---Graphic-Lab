@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Encore Graphic Lab</title>
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -219,7 +219,7 @@
 </head>
 <body>
 <div id="root"></div>
-<script type="text/babel">
+<script id="app-src" type="text/template">
 const { useState, useRef, useCallback, useEffect } = React;
 
 // ── Grid config ────────────────────────────────────────────────────────────────
@@ -956,6 +956,18 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+<script>
+  (function() {
+    var src = document.getElementById('app-src').textContent;
+    var compiled = Babel.transform(src, {
+      presets: [['react', { runtime: 'classic' }], 'env'],
+      sourceType: 'script',
+    }).code;
+    var s = document.createElement('script');
+    s.textContent = compiled;
+    document.head.appendChild(s);
+  })();
 </script>
 </body>
 </html>
